@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/game_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/card_margin"
+    android:layout_marginBottom="@dimen/card_margin"
+    android:paddingRight="@dimen/card_horizontal_padding"
+    android:paddingLeft="@dimen/card_horizontal_padding"
+    android:paddingTop="@dimen/card_vertical_padding"
+    android:paddingBottom="@dimen/card_vertical_padding"
+    android:background="@drawable/card_red">
+
+    <TextView
+        android:id="@+id/game_card_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_card_label"
+        android:textSize="@dimen/abc_text_size_display_2_material" />
+</RelativeLayout>

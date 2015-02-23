@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="colorAccent">@color/primary_dark</item>
+        <item name="md_dark_theme">true</item>
+    </style>
+
+</resources>
