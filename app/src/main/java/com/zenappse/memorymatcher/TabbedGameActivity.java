@@ -26,6 +26,8 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
     private static final int GAME_GRID_ONE = 0;
     private static final int GAME_GRID_TWO = 1;
 
+    private static final String GAME_GRID_FRAGMENT_TAG = "android:switcher:" + R.id.pager;
+
     private static final String EXTRA_USERNAME = "username";
     private static final String EXTRA_GAMEBOARD = "gameboard";
     private static final String EXTRA_CARD_DECK = "carddeck";
@@ -94,10 +96,11 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         });
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+        // TODO Use non-default fragment tags
+        mGridOneFragment = (GameGridFragment) fragmentManager.findFragmentByTag(GAME_GRID_FRAGMENT_TAG + ":0");
+        mGridTwoFragment = (GameGridFragment) fragmentManager.findFragmentByTag(GAME_GRID_FRAGMENT_TAG + ":1");
 
         Bundle bundle;
-
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (mGridOneFragment == null) {
             mGridOneFragment = new GameGridFragment();
             bundle = new Bundle();
@@ -131,11 +134,8 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
             mGridTwoFragment.setArguments(bundle);
         }
 
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
         // Create the adapter that will return a fragment for each of the sections
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -326,7 +326,7 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         if (gameController.gameOver()) {
             showGameOverDialog();
         }
-
+        gameState.setGameController(gameController);
         gameState.saveState();
     }
 
