@@ -16,6 +16,8 @@ public class GameState {
     private int highscore;
     private String recordHolder;
 
+    private String username;
+
     public GameState(GameStorageManager gameStorageManager) {
         gameController = null;
         gameGridCardDeck = null;
@@ -26,12 +28,14 @@ public class GameState {
         highscore = 0;
 
         recordHolder = "";
+
+        username = "";
     }
 
     public boolean saveState(){
         boolean saveSuccessful;
         saveSuccessful = gameStorageManager.setGameGridCardDeck(gameGridCardDeck);
-        saveSuccessful = (gameStorageManager.setGameController(gameController) && saveSuccessful);
+        saveSuccessful = (gameStorageManager.setGameController(gameController, username) && saveSuccessful);
         saveSuccessful = (gameStorageManager.setHighScore(highscore) && saveSuccessful);
         saveSuccessful = (gameStorageManager.setCurrentScore(currentScore) && saveSuccessful);
         saveSuccessful = (gameStorageManager.setRecordHolder(recordHolder) && saveSuccessful);
@@ -40,7 +44,7 @@ public class GameState {
 
     public void loadState(){
         gameGridCardDeck = gameStorageManager.getGameGridCardDeck();
-        gameController = gameStorageManager.getGameController();
+        gameController = gameStorageManager.getGameController(username);
         currentScore = gameStorageManager.getCurrentScore();
         highscore = gameStorageManager.getHighScore();
         recordHolder = gameStorageManager.getRecordHolder();
@@ -84,5 +88,13 @@ public class GameState {
 
     public void setGameGridCardDeck(GameGridCardDeck gameGridCardDeck) {
         this.gameGridCardDeck = gameGridCardDeck;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

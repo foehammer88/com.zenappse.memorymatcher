@@ -24,6 +24,8 @@ public class GameController implements Serializable{
     private String recordHolder = "";
     private boolean highscoreChanged = false;
 
+    private boolean gameInProgress = false;
+
     public GameController() {
         gameGridCardDeck = new GameGridCardDeck();
 
@@ -41,6 +43,8 @@ public class GameController implements Serializable{
         matchFound = false;
         matchingComplete = false;
         highscoreChanged = false;
+
+        gameInProgress = false;
 
         return gameGridCardDeck;
     }
@@ -97,6 +101,8 @@ public class GameController implements Serializable{
             if (matchFound) {
                 score += 10;
                 numMatches++;
+
+                updateDeck(previousCardTapped, cardTapped);
             } else {
                 score--;
             }
@@ -106,6 +112,19 @@ public class GameController implements Serializable{
                 highscoreChanged = true;
             }
         }
+
+        gameInProgress = true;
+    }
+
+    public void updateDeck(Card cardOne, Card cardTwo) {
+        int cardOneGameBoard = cardOne.getGameBoard();
+        int cardOnePos = cardOne.getPosition();
+
+        int cardTwoGameBoard = cardTwo.getGameBoard();
+        int cardTwoPos = cardTwo.getPosition();
+
+        gameGridCardDeck.getDeckOfCards(cardOneGameBoard).get(cardOnePos).setFlipped(true);
+        gameGridCardDeck.getDeckOfCards(cardTwoGameBoard).get(cardTwoPos).setFlipped(true);
     }
 
     public boolean gameOver() {
@@ -176,4 +195,11 @@ public class GameController implements Serializable{
         this.recordHolder = recordHolder;
     }
 
+    public boolean isGameInProgress() {
+        return gameInProgress;
+    }
+
+    public void setGameInProgress(boolean gameInProgress) {
+        this.gameInProgress = gameInProgress;
+    }
 }

@@ -240,14 +240,19 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         gameStorageManager = new GameStorageManager(this);
         gameState = new GameState(gameStorageManager);
 
+        gameState.setUsername(username);
+
         gameState.loadState();
 
         gameController = gameState.getGameController();
 
         gameController.setHighscore(gameState.getHighscore());
-        gameController.setScore(gameState.getCurrentScore());
 
-        gameGridCardDeck = gameController.shuffleDeck();
+        if (gameController.isGameInProgress()) {
+            gameGridCardDeck = gameController.getGameGridCardDeck();
+        } else {
+            gameGridCardDeck = gameController.shuffleDeck();
+        }
 
         if (TextUtils.isEmpty(gameState.getRecordHolder())) {
             gameController.setRecordHolder(username);
@@ -327,6 +332,7 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
             showGameOverDialog();
         }
         gameState.setGameController(gameController);
+        gameState.setCurrentScore(gameController.getScore());
         gameState.saveState();
     }
 

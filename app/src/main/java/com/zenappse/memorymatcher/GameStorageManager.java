@@ -197,11 +197,11 @@ public class GameStorageManager {
         return gameGridCardDeck;
     }
 
-    public boolean setGameController(GameController gameController) {
+    public boolean setGameController(GameController gameController, String username) {
         if (sharedPreferences != null) {
             SharedPreferences.Editor prefEditor = sharedPreferences.edit();
             try {
-                prefEditor.putString(PREFS_GAME_CONTROLLER, ObjectSerializer.serialize(gameController));
+                prefEditor.putString(PREFS_GAME_CONTROLLER + username, ObjectSerializer.serialize(gameController));
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -215,11 +215,11 @@ public class GameStorageManager {
         return false;
     }
 
-    public GameController getGameController() {
+    public GameController getGameController(String username) {
         GameController gameController;
         if (sharedPreferences != null) {
             try {
-                gameController = (GameController) ObjectSerializer.deserialize(sharedPreferences.getString(PREFS_GAME_CONTROLLER, ObjectSerializer.serialize(new GameController())));
+                gameController = (GameController) ObjectSerializer.deserialize(sharedPreferences.getString(PREFS_GAME_CONTROLLER + username, ObjectSerializer.serialize(new GameController())));
             } catch (IOException e) {
                 e.printStackTrace();
                 gameController = new GameController();
