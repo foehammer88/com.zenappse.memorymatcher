@@ -34,6 +34,7 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
     private static final String EXTRA_SCORE = "score";
     private static final String EXTRA_RECORD_HOLDER = "recordholder";
     private static final String EXTRA_HIGHSCORE = "highscore";
+    private static final String EXTRA_LAST_GAME_SCORE = "lastgamescore";
 
     private GameStorageManager gameStorageManager;
 
@@ -103,34 +104,15 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         Bundle bundle;
         if (mGridOneFragment == null) {
             mGridOneFragment = new GameGridFragment();
-            bundle = new Bundle();
-            bundle.putString(EXTRA_USERNAME, username);
-            bundle.putString(EXTRA_RECORD_HOLDER, gameController.getRecordHolder());
-            bundle.putInt(EXTRA_SCORE, gameController.getScore());
-            bundle.putInt(EXTRA_HIGHSCORE, gameController.getHighscore());
-            bundle.putInt(EXTRA_GAMEBOARD, 0);
-            try {
-                // This is slower than other methods, but the object isn't /that/ big
-                bundle.putString(EXTRA_CARD_DECK, ObjectSerializer.serialize(gameGridCardDeck));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            bundle = buildBundleForGameGrid(0);
+
             mGridOneFragment.setArguments(bundle);
         }
 
         if (mGridTwoFragment == null) {
             mGridTwoFragment = new GameGridFragment();
-            bundle = new Bundle();
-            bundle.putString(EXTRA_USERNAME, username);
-            bundle.putString(EXTRA_RECORD_HOLDER, gameController.getRecordHolder());
-            bundle.putInt(EXTRA_SCORE, gameController.getScore());
-            bundle.putInt(EXTRA_HIGHSCORE, gameController.getHighscore());
-            bundle.putInt(EXTRA_GAMEBOARD, 1);
-            try {
-                bundle.putString(EXTRA_CARD_DECK, ObjectSerializer.serialize(gameGridCardDeck));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            bundle = buildBundleForGameGrid(1);
+
             mGridTwoFragment.setArguments(bundle);
         }
 
@@ -151,6 +133,7 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
 
     @Override
     protected void onDestroy() {
+        gameState.setGameController(gameController);
         gameState.saveState();
         super.onDestroy();
     }
@@ -160,6 +143,7 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
      */
     @Override
     protected void onPause() {
+        gameState.setGameController(gameController);
         gameState.saveState();
         super.onPause();
     }
@@ -207,13 +191,19 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
             case R.id.action_trigger_win:
                 showGameOverDialog();
                 return true;
+
+            case R.id.action_start_new_game:
+                resetGame(true);
+                return true;
+
             case R.id.action_reset_highscore:
                 resetHighScore();
                 return true;
+
             case R.id.action_logout:
-                gameState.saveState();
-                finish();
+                logout();
                 return true;
+
             default:
                 break;
         }
@@ -234,46 +224,6 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    private void setupGame() {
-        gameStorageManager = new GameStorageManager(this);
-        gameState = new GameState(gameStorageManager);
-
-        gameState.setUsername(username);
-
-        gameState.loadState();
-
-        gameController = gameState.getGameController();
-
-        gameController.setHighscore(gameState.getHighscore());
-
-        if (gameController.isGameInProgress()) {
-            gameGridCardDeck = gameController.getGameGridCardDeck();
-        } else {
-            gameGridCardDeck = gameController.shuffleDeck();
-        }
-
-        if (TextUtils.isEmpty(gameState.getRecordHolder())) {
-            gameController.setRecordHolder(username);
-            gameState.setRecordHolder(username);
-        } else {
-            gameController.setRecordHolder(gameState.getRecordHolder());
-        }
-
-        gameState.saveState();
-    }
-
-    private void resetHighScore() {
-        gameState.setHighscore(0);
-        gameState.setRecordHolder("");
-        gameController.setHighscore(gameState.getHighscore());
-        gameController.setRecordHolder(gameState.getRecordHolder());
-
-        mGridOneFragment.onHighScoreChange(gameController.getHighscore(), gameController.getRecordHolder());
-        mGridTwoFragment.onHighScoreChange(gameController.getHighscore(), gameController.getRecordHolder());
-
-        gameState.saveState();
     }
 
     @Override
@@ -336,30 +286,123 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         gameState.saveState();
     }
 
+    private void setupGame() {
+        gameStorageManager = new GameStorageManager(this);
+        gameState = new GameState(gameStorageManager);
+
+        gameState.setUsername(username);
+
+        gameState.loadState();
+
+        gameController = gameState.getGameController();
+
+        gameController.setHighscore(gameState.getHighscore());
+
+        if (gameController.isGameInProgress()) {
+            gameGridCardDeck = gameController.getGameGridCardDeck();
+        } else {
+            gameGridCardDeck = gameController.shuffleDeck();
+        }
+
+        if (TextUtils.isEmpty(gameState.getRecordHolder())) {
+            gameController.setRecordHolder(username);
+            gameState.setRecordHolder(username);
+        } else {
+            gameController.setRecordHolder(gameState.getRecordHolder());
+        }
+
+        gameState.setGameController(gameController);
+        gameState.saveState();
+    }
+
+    private Bundle buildBundleForGameGrid(int gameBoard) {
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_USERNAME, username);
+        bundle.putString(EXTRA_RECORD_HOLDER, gameController.getRecordHolder());
+        bundle.putInt(EXTRA_SCORE, gameController.getScore());
+        bundle.putInt(EXTRA_LAST_GAME_SCORE, gameController.getLastGameScore());
+        bundle.putInt(EXTRA_HIGHSCORE, gameController.getHighscore());
+        bundle.putInt(EXTRA_GAMEBOARD, gameBoard);
+
+        try {
+            // This is slower than other methods, but the object isn't /that/ big
+            bundle.putString(EXTRA_CARD_DECK, ObjectSerializer.serialize(gameGridCardDeck));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bundle;
+    }
+
+    private void resetHighScore() {
+        gameState.setHighscore(0);
+        gameState.setRecordHolder("");
+        gameController.setHighscore(gameState.getHighscore());
+        gameController.setRecordHolder(gameState.getRecordHolder());
+
+        mGridOneFragment.onHighScoreChange(gameController.getHighscore(), gameController.getRecordHolder());
+        mGridTwoFragment.onHighScoreChange(gameController.getHighscore(), gameController.getRecordHolder());
+
+        gameState.saveState();
+    }
+
     private void showGameOverDialog() {
+        String winningContent = getResources().getString(R.string.winning_text_content);
+
+        StringBuilder stringBuilder = new StringBuilder(winningContent);
+
+        if (gameController.hasNewHighScoreBeenSet()) {
+            String string = getResources().getString(R.string.winning_text_highscore_content) + " ";
+            stringBuilder.insert(9, string);
+        }
+        String score = " " + gameController.getScore();
+        winningContent = stringBuilder.append(score).append(getResources().getString(R.string.winning_text_play_again_content)).toString();
+
         final MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(this)
             .title(R.string.congratulations_text)
-            .content(R.string.winning_text_content)
+            .content(winningContent)
             .positiveText(R.string.play_again)
-            .negativeText(R.string.not_now);
+            .neutralText(R.string.not_now)
+            .negativeText(R.string.action_logout);
 
         dialogBuilder.callback(new MaterialDialog.ButtonCallback() {
+
             @Override
             public void onPositive(MaterialDialog dialog) {
-                resetGame();
+                super.onPositive(dialog);
+                resetGame(true);
+            }
+
+            @Override
+            public void onNegative(MaterialDialog dialog) {
+                super.onNegative(dialog);
+                // Reset the game and logout
+                resetGame(false);
+                logout();
             }
         });
 
         dialogBuilder.show();
     }
 
-    private void resetGame() {
+    private void resetGame(boolean updateUI) {
         gameController.resetGame();
 
-        mGridOneFragment.onGameReset(gameController.getGameGridCardDeck());
-        mGridTwoFragment.onGameReset(gameController.getGameGridCardDeck());
+        if (updateUI) {
+            mGridOneFragment.onLastGameScoreChange(gameController.getLastGameScore());
+            mGridTwoFragment.onLastGameScoreChange(gameController.getLastGameScore());
 
+            mGridOneFragment.onGameReset(gameController.getGameGridCardDeck());
+            mGridTwoFragment.onGameReset(gameController.getGameGridCardDeck());
+        }
+        gameState.setGameController(gameController);
         gameState.saveState();
+    }
+
+    private void logout() {
+        gameState.setGameController(gameController);
+        gameState.saveState();
+        finish();
     }
 
     /**

@@ -16,6 +16,15 @@
         android:layout_marginLeft="@dimen/score_label_margin"/>
 
     <TextView
+        android:id="@+id/last_game_score"
+        android:text="@string/default_last_score_label"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/current_score_textview"
+        android:layout_marginLeft="@dimen/score_label_margin"/>
+
+    <TextView
         android:id="@+id/highscore_label_textview"
         android:text="@string/default_highscore_label"
         android:textSize="@dimen/abc_text_size_medium_material"

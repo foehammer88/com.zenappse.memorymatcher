@@ -28,6 +28,7 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
     private static final String EXTRA_SCORE = "score";
     private static final String EXTRA_RECORD_HOLDER = "recordholder";
     private static final String EXTRA_HIGHSCORE = "highscore";
+    private static final String EXTRA_LAST_GAME_SCORE = "lastgamescore";
 
     private GameGridCardDeck gameGridCardDeck = null;
 
@@ -41,11 +42,13 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
     private View gameBoardView;
     private GridView gridView;
     private TextView scoreTextView;
+    private TextView lastGameScoreTextView;
     private TextView highscoreTextView;
     private TextView recordHolderTextView;
 
     private int currentScore = 0;
     private int highscore = 0;
+    private int lastGameScore = 0;
     private String recordHolder = "";
 
     public GameGridFragment() {
@@ -60,6 +63,7 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
         if (getArguments() != null) {
             username = getArguments().getString(EXTRA_USERNAME);
             currentScore = getArguments().getInt(EXTRA_SCORE);
+            lastGameScore = getArguments().getInt(EXTRA_LAST_GAME_SCORE);
             highscore = getArguments().getInt(EXTRA_HIGHSCORE);
             recordHolder = getArguments().getString(EXTRA_RECORD_HOLDER);
             gameBoard = getArguments().getInt(EXTRA_GAMEBOARD);
@@ -84,10 +88,12 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
         if (gameBoardView != null) {
             gridView = (GridView) gameBoardView.findViewById(R.id.gridview);
             scoreTextView = (TextView) gameBoardView.findViewById(R.id.current_score_textview);
+            lastGameScoreTextView = (TextView) gameBoardView.findViewById(R.id.last_game_score);
             highscoreTextView = (TextView) gameBoardView.findViewById(R.id.highscore_label_textview);
             recordHolderTextView = (TextView) gameBoardView.findViewById(R.id.highscore_recordholder_textview);
 
             scoreTextView.setText("Score: " + currentScore);
+            lastGameScoreTextView.setText("Last game: " + lastGameScore);
             highscoreTextView.setText("High score: " + highscore);
 
             String recordHolderText = "";
@@ -127,6 +133,7 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
         gameBoardView = null;
         gridView = null;
         scoreTextView = null;
+        lastGameScoreTextView = null;
         highscoreTextView = null;
         recordHolderTextView = null;
     }
@@ -187,6 +194,11 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
     public void onScoreChange(int score) {
         currentScore = score;
         scoreTextView.setText("Score: " + score);
+    }
+
+    public void onLastGameScoreChange(int score) {
+        lastGameScore = score;
+        lastGameScoreTextView.setText("Last game: " + score);
     }
 
     public void onHighScoreChange(int highscore, String recordHolder) {

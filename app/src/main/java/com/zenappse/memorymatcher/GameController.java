@@ -17,12 +17,14 @@ public class GameController implements Serializable{
     private boolean matchingComplete = false;
 
     private int score = 0;
+    private int lastGameScore = 0;
     private int highscore = 0;
 
     private int numMatches = 0;
 
     private String recordHolder = "";
     private boolean highscoreChanged = false;
+    private boolean hasNewHighscore = false;
 
     private boolean gameInProgress = false;
 
@@ -37,12 +39,15 @@ public class GameController implements Serializable{
 
         shuffleDeck();
 
+        lastGameScore = score;
+
         score = 0;
         numMatches = 0;
 
         matchFound = false;
         matchingComplete = false;
         highscoreChanged = false;
+        hasNewHighscore = false;
 
         gameInProgress = false;
 
@@ -110,6 +115,7 @@ public class GameController implements Serializable{
             if (score > highscore) {
                 highscore = score;
                 highscoreChanged = true;
+                hasNewHighscore = true;
             }
         }
 
@@ -145,6 +151,10 @@ public class GameController implements Serializable{
         boolean changed = highscoreChanged;
         highscoreChanged = false;
         return changed;
+    }
+
+    public boolean hasNewHighScoreBeenSet() {
+        return hasNewHighscore;
     }
 
     public GameGridCardDeck getGameGridCardDeck() {
@@ -201,5 +211,13 @@ public class GameController implements Serializable{
 
     public void setGameInProgress(boolean gameInProgress) {
         this.gameInProgress = gameInProgress;
+    }
+
+    public int getLastGameScore() {
+        return lastGameScore;
+    }
+
+    public void setLastGameScore(int lastGameScore) {
+        this.lastGameScore = lastGameScore;
     }
 }
