@@ -156,16 +156,9 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
         if(gameGridCardDeck != null) {
             final Card tappedCard = (Card) parent.getItemAtPosition(position);
 
-            TextView cardNumberTextView = (TextView) view.findViewById(R.id.game_card_textview);
-
             if (!tappedCard.isFlipped()) {
+                flipCard(view, tappedCard);
                 tappedCard.setFlipped(true);
-                if (tappedCard.isRed()) {
-                    view.setBackgroundResource(R.drawable.card_red);
-                } else {
-                    view.setBackgroundResource(R.drawable.card_black);
-                }
-                cardNumberTextView.setVisibility(View.VISIBLE);
 
                 Handler handler = new Handler();
 
@@ -184,11 +177,31 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
     public void onCardMatchNotFound(Card cardToFlipBack) {
         View cardView = gridView.getChildAt(cardToFlipBack.getPosition());
 
-        TextView cardNumberTextView = (TextView) cardView.findViewById(R.id.game_card_textview);
-
+        flipCard(cardView, cardToFlipBack);
         cardToFlipBack.setFlipped(false);
-        cardView.setBackgroundResource(R.drawable.card_back);
-        cardNumberTextView.setVisibility(View.INVISIBLE);
+    }
+
+    private void flipCard(View cardView, Card tappedCard) {
+        FlipAnimation flipAnimation = new FlipAnimation(cardView);
+
+        if (tappedCard.isRed()) {
+            // Card is red
+            flipAnimation.setColorCard(true);
+        } else {
+            // Card is black
+            flipAnimation.setColorCard(false);
+        }
+
+        if (tappedCard.isFlipped()) {
+            // Card is flipped over
+            flipAnimation.setFlippedState(true);
+            flipAnimation.reverse();
+        } else {
+            // Card is showing it's back face
+            flipAnimation.setFlippedState(false);
+        }
+
+        cardView.startAnimation(flipAnimation);
     }
 
     public void onScoreChange(int score) {
