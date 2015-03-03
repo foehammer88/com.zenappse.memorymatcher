@@ -34,6 +34,11 @@ public class GameController implements Serializable{
         gameGridCardDeck.seedDeck(0);
     }
 
+    /**
+     * Resets the controller to a fresh game
+     *
+     * @return GameGridCardDeck
+     */
     public GameGridCardDeck resetGame() {
         gameGridCardDeck.resetDecks();
 
@@ -54,6 +59,11 @@ public class GameController implements Serializable{
         return gameGridCardDeck;
     }
 
+    /**
+     * Shuffles the cards based on the Collections.shuffle() method
+     *
+     * @return GameGridCardDeck
+     */
     public GameGridCardDeck shuffleDeck() {
         ArrayList<Card> joinedDeck = new ArrayList<>(gameGridCardDeck.getDeckOfCards(0));
         joinedDeck.addAll(gameGridCardDeck.getDeckOfCards(1));
@@ -91,10 +101,25 @@ public class GameController implements Serializable{
         return gameGridCardDeck;
     }
 
+    /**
+     * Method to compare two cards that were flipped over. If they are a pair
+     * return true
+     *
+     * @return boolean true if match, false otherwise
+     *
+     * @param cardOne Previously tapped card
+     * @param cardTwo Current card tapped
+     */
     public boolean compareCards(Card cardOne, Card cardTwo) {
         return ((cardOne.isRed() == cardTwo.isRed()) && cardOne.getCardValue().equals(cardTwo.getCardValue()));
     }
 
+    /**
+     * Processes a card tap, if there was no previous card tapped, then set
+     * it to be the current card, else check for matches and update score
+     *
+     * @param cardTapped card that is currently being tapped
+     */
     public void cardTapped(Card cardTapped) {
         if (previousCardTapped == null) {
             previousCardTapped = cardTapped;
@@ -122,7 +147,14 @@ public class GameController implements Serializable{
         gameInProgress = true;
     }
 
-    public void updateDeck(Card cardOne, Card cardTwo) {
+    /**
+     * Method to update the card deck with what has been flipped over with a current
+     * match
+     *
+     * @param cardOne Previously tapped card
+     * @param cardTwo Current card tapped
+     */
+    private void updateDeck(Card cardOne, Card cardTwo) {
         int cardOneGameBoard = cardOne.getGameBoard();
         int cardOnePos = cardOne.getPosition();
 

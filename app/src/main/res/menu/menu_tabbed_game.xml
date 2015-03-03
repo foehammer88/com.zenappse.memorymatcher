@@ -3,11 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.zenappse.memorymatcher.TabbedGameActivity">
 
-    <item android:id="@+id/action_trigger_win"
-        android:title="@string/action_trigger_win"
-        android:orderInCategory="99"
-        app:showAsAction="never" />
-
     <item android:id="@+id/action_start_new_game"
         android:title="@string/action_start_new_game"
         android:orderInCategory="100"

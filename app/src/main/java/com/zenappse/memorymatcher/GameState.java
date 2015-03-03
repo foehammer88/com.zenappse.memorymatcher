@@ -18,6 +18,11 @@ public class GameState {
 
     private String username;
 
+    /**
+     * GameState handles the saving and loading of the game via the GameStorageManager
+     *
+     * @param gameStorageManager
+     */
     public GameState(GameStorageManager gameStorageManager) {
         gameController = null;
         gameGridCardDeck = null;
@@ -32,6 +37,12 @@ public class GameState {
         username = "";
     }
 
+    /**
+     * Saves the game: gameGridCardDeck, gameController for the given username, highscore,
+     * currentScore, and recordHolder
+     *
+     * @return boolean true if successful
+     */
     public boolean saveState(){
         boolean saveSuccessful;
         saveSuccessful = gameStorageManager.setGameGridCardDeck(gameGridCardDeck);
@@ -42,6 +53,10 @@ public class GameState {
         return saveSuccessful;
     }
 
+    /**
+     * Loads the game: gameGridCardDeck, gameController for the given username, highscore,
+     * currentScore, and recordHolder
+     */
     public void loadState(){
         gameGridCardDeck = gameStorageManager.getGameGridCardDeck();
         gameController = gameStorageManager.getGameController(username);

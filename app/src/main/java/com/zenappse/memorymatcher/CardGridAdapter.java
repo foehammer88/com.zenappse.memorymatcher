@@ -60,7 +60,6 @@ public class CardGridAdapter extends BaseAdapter{
 
             int id = View.generateViewId();
             cardView.setId(id);
-            currentCard.setViewId(id);
             cardIds.add(id);
         } else {
             cardView = view;

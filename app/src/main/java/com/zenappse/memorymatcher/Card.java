@@ -14,8 +14,16 @@ public class Card implements Serializable{
     private boolean isFlipped = false;
     private int position = 0;
     private int gameBoard = 0;
-    private int viewId = 0;
 
+    /**
+     * Represents a card in the game
+     *
+     * @param cardValue Number value of the card.
+     * @param isRed     If the card is red or black.
+     * @param isFlipped If the card is flipped over or not.
+     * @param position  Position in the grid, Zero indexed.
+     * @param gameBoard Which game screen the card is on.
+     */
     public Card(String cardValue, boolean isRed, boolean isFlipped, int position, int gameBoard) {
         this.cardValue = cardValue;
         this.isRed = isRed;
@@ -63,13 +71,5 @@ public class Card implements Serializable{
 
     public void setFlipped(boolean isFlipped) {
         this.isFlipped = isFlipped;
-    }
-
-    public int getViewId() {
-        return viewId;
-    }
-
-    public void setViewId(int viewId) {
-        this.viewId = viewId;
     }
 }

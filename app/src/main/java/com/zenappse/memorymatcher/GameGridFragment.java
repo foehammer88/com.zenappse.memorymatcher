@@ -51,6 +51,11 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
     private int lastGameScore = 0;
     private String recordHolder = "";
 
+    private String scoreText = "Score: ";
+    private String lastGameText = "Last game: ";
+    private String highscoreText = "High score: ";
+    private String byText = "by ";
+
     public GameGridFragment() {
         // Required empty public constructor
     }
@@ -92,13 +97,13 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
             highscoreTextView = (TextView) gameBoardView.findViewById(R.id.highscore_label_textview);
             recordHolderTextView = (TextView) gameBoardView.findViewById(R.id.highscore_recordholder_textview);
 
-            scoreTextView.setText("Score: " + currentScore);
-            lastGameScoreTextView.setText("Last game: " + lastGameScore);
-            highscoreTextView.setText("High score: " + highscore);
+            scoreTextView.setText(scoreText + currentScore);
+            lastGameScoreTextView.setText(lastGameText + lastGameScore);
+            highscoreTextView.setText(highscoreText + highscore);
 
             String recordHolderText = "";
             if (!TextUtils.isEmpty(recordHolder)) {
-                recordHolderText = "by " + recordHolder;
+                recordHolderText = byText + recordHolder;
             }
 
             recordHolderTextView.setText(recordHolderText);
@@ -181,10 +186,17 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
         cardToFlipBack.setFlipped(false);
     }
 
-    private void flipCard(View cardView, Card tappedCard) {
+    /**
+     * Method to call to flip a card given the View of the card and the actual Card
+     * representation object
+     *
+     * @param cardView   View that represents the card
+     * @param cardToFlip Card object of card to flip
+     */
+    private void flipCard(View cardView, Card cardToFlip) {
         FlipAnimation flipAnimation = new FlipAnimation(cardView);
 
-        if (tappedCard.isRed()) {
+        if (cardToFlip.isRed()) {
             // Card is red
             flipAnimation.setColorCard(true);
         } else {
@@ -192,7 +204,7 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
             flipAnimation.setColorCard(false);
         }
 
-        if (tappedCard.isFlipped()) {
+        if (cardToFlip.isFlipped()) {
             // Card is flipped over
             flipAnimation.setFlippedState(true);
             flipAnimation.reverse();
@@ -206,24 +218,24 @@ public class GameGridFragment extends Fragment implements AdapterView.OnItemClic
 
     public void onScoreChange(int score) {
         currentScore = score;
-        scoreTextView.setText("Score: " + score);
+        scoreTextView.setText(scoreText + score);
     }
 
     public void onLastGameScoreChange(int score) {
         lastGameScore = score;
-        lastGameScoreTextView.setText("Last game: " + score);
+        lastGameScoreTextView.setText(lastGameText + score);
     }
 
     public void onHighScoreChange(int highscore, String recordHolder) {
         this.highscore = highscore;
-        highscoreTextView.setText("High score: " + highscore);
+        highscoreTextView.setText(highscoreText + highscore);
 
         if (!this.recordHolder.equals(recordHolder)) {
             this.recordHolder = recordHolder;
 
             String recordHolderText = "";
             if (!TextUtils.isEmpty(recordHolder)) {
-                recordHolderText = "by " + recordHolder;
+                recordHolderText = byText + recordHolder;
             }
 
             recordHolderTextView.setText(recordHolderText);

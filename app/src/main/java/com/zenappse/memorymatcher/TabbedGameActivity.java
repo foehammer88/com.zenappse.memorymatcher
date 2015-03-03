@@ -18,7 +18,14 @@ import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-
+/**
+ * An Activity that contains a ViewPager backed implementation
+ * of tabs (Fragments)
+ *
+ * Auto-generated via Android Studio
+ *
+ * Modified by Patrick Ganson
+ */
 public class TabbedGameActivity extends ActionBarActivity implements ActionBar.TabListener, GameGridFragment.OnGameGridInteractionListener {
 
     private static final String TAG = "TabbedGameActivity";
@@ -188,10 +195,6 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_trigger_win:
-                showGameOverDialog();
-                return true;
-
             case R.id.action_start_new_game:
                 resetGame(true);
                 return true;
@@ -226,6 +229,13 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
+    /**
+     * Listener method that is invoked when a card is tapped on a GameGridFragment instance.
+     * Performs the necessary functions in Game Controller and calls the callback to the
+     * Fragments to flip cards back over and to update the score
+     *
+     * @param cardTapped Current Card that has been tapped
+     */
     @Override
     public void onCardItemClickInteraction(Card cardTapped) {
         gameController.cardTapped(cardTapped);
@@ -286,6 +296,9 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         gameState.saveState();
     }
 
+    /**
+     * Method to instantiate the required game objects and initialize the card decks
+     */
     private void setupGame() {
         gameStorageManager = new GameStorageManager(this);
         gameState = new GameState(gameStorageManager);
@@ -315,6 +328,12 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         gameState.saveState();
     }
 
+    /**
+     * Method that builds the bundle to send to the game fragments
+     *
+     * @return Bundle
+     * @param gameBoard Int for a game board
+     */
     private Bundle buildBundleForGameGrid(int gameBoard) {
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_USERNAME, username);
@@ -355,6 +374,7 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
             String string = getResources().getString(R.string.winning_text_highscore_content) + " ";
             stringBuilder.insert(9, string);
         }
+
         String score = " " + gameController.getScore();
         winningContent = stringBuilder.append(score).append(getResources().getString(R.string.winning_text_play_again_content)).toString();
 
@@ -366,7 +386,6 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
             .negativeText(R.string.action_logout);
 
         dialogBuilder.callback(new MaterialDialog.ButtonCallback() {
-
             @Override
             public void onPositive(MaterialDialog dialog) {
                 super.onPositive(dialog);
@@ -385,6 +404,11 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         dialogBuilder.show();
     }
 
+    /**
+     * Resets the current game instance and updates the UI if param is true
+     *
+     * @param updateUI Boolean to determine whether to update the UI or not
+     */
     private void resetGame(boolean updateUI) {
         gameController.resetGame();
 
@@ -399,6 +423,9 @@ public class TabbedGameActivity extends ActionBarActivity implements ActionBar.T
         gameState.saveState();
     }
 
+    /**
+     * Saves game state and returns back to LoginActivity
+     */
     private void logout() {
         gameState.setGameController(gameController);
         gameState.saveState();

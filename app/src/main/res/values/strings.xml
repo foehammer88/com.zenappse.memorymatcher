@@ -6,9 +6,8 @@
     <string name="title_grid_tab_two">Grid 2</string>
 
     <string name="action_logout">Logout</string>
-    <string name="action_trigger_win">Trigger Win</string>
     <string name="action_start_new_game">Start New Game</string>
-    <string name="action_reset_highscore">Reset high score</string>
+    <string name="action_reset_highscore">Reset High Score</string>
 
     <string name="default_card_label">1</string>
     <string name="default_score_label">Score: 0</string>

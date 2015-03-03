@@ -26,6 +26,12 @@ public class GameGridCardDeck implements Serializable {
         }
     }
 
+    /**
+     * Sets the deck of cards ArrayList to the given deck for the specified game grid
+     *
+     * @param gameGrid    Which game grid is the deck for
+     * @param deckOfCards ArrayList of Cards that is a deck
+     */
     public void setDeckOfCards(int gameGrid, ArrayList<Card> deckOfCards) {
         if (gameGrid == 0) {
             this.deckOfCardsBoardOne = deckOfCards;
@@ -44,6 +50,11 @@ public class GameGridCardDeck implements Serializable {
         seedDeck(0);
     }
 
+    /**
+     * Initialize the card decks of cards
+     *
+     * @param gameGrid Default gameGrid for initialization
+     */
     public void seedDeck(int gameGrid) {
             deckOfCardsBoardOne.add(new Card("1", true, false, 0, gameGrid));
             deckOfCardsBoardOne.add(new Card("2", true, false, 1, gameGrid));

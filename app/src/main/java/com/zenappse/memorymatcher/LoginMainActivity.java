@@ -15,7 +15,6 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.Set;
 
-
 /**
  * A login screen that offers login via username.
  *
