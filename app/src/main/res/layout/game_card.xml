@@ -16,5 +16,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/default_card_label"
-        android:textSize="@dimen/abc_text_size_display_2_material" />
+        android:textSize="40dp" />
 </RelativeLayout>
